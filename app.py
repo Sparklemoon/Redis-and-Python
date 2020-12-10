@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_redis import FlaskRedis 
+from flask_cors import CORS 
 
 import random
 import string
@@ -8,6 +9,7 @@ app = Flask(__name__)
 app.config["REDIS_URL"] ="redis://@localhost:6379/0"
 
 redis_client = FlaskRedis(app)
+CORS(app)
 
 @app.route("/url/add", methods=["POST"])
 def add_url():
@@ -28,7 +30,9 @@ def get_url(key):
 @app.route("/url/get", methods=["GET"])
 def get_all_urls():
     all_keys = redis_client.keys("*")
-    all_urls = []
+    # all_urls = []
+    # for key in all_keys:
+    #     keys.append(key.decode("utf-8"))
     return jsonify([key.decode("utf-8") for key in all_keys])
 
 if__name__=="__main__":
