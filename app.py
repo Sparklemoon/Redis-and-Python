@@ -14,10 +14,16 @@ def add_url():
     post_data = request.get_json()
     url = post_data.get("url")
 
-    key = "".join([random.SystemRandom().choice([string.ascii_uppercase + string.ascii_lowercase])])
-    redis_client.set("Key", url)
+    key = "".join([random.SystemRandom().choice(string.ascii_uppercase + string.ascii_lowercase)for _ in range(20)])
+    redis_client.set(key, url)
 
-    return jsonify("Data added")
+    return jsonify(key)
+
+@app.route("/url/get/<key>", methods=["GET"])
+def get_url(key):
+    url = redis_client.get(key)
+    print(url)
+    return jsonify(url)
 
 if__name__=="__main__":
     app.run(debug=True)
